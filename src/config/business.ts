@@ -2,6 +2,10 @@
 //  CONFIG POR NEGOCIO  —  Edita SOLO este archivo para cada cliente.
 //  Cambia textos, colores, servicios, fotos y datos de contacto.
 //  Nada mas que tocar para lanzar un cliente nuevo.
+//
+//  CLIENTE: Lúa Estilistas — Narón (área de Ferrol), A Coruña.
+//  Identidad: elegante, moderna, cercana, gallega. Blanco / negro / dorado.
+//  (Datos de muestra realistas. Sustituir por los reales del salón.)
 // =====================================================================
 
 export interface Service {
@@ -65,79 +69,82 @@ export interface BusinessConfig {
 }
 
 export const business: BusinessConfig = {
-  slug: 'peluqueria-demo',
-  name: 'Peluquería Demo',
-  tagline: 'Tu estilo, nuestro oficio',
-  city: 'Madrid',
+  slug: 'lua-estilistas',
+  name: 'Lúa Estilistas',
+  tagline: 'Color, corte y cuidado del cabello con mirada gallega. En el corazón de Narón.',
+  city: 'Narón',
   category: 'Peluquería',
 
-  phone: '+34 600 123 456',
-  phoneRaw: '+34600123456',
-  whatsapp: '34600123456',
-  whatsappMessage: 'Hola, me gustaría pedir una cita 💇',
-  email: 'hola@peluqueriademo.es',
-  address: 'Calle Ejemplo 12, 28001 Madrid',
-  mapsUrl: 'https://maps.google.com/?q=Peluqueria+Demo+Madrid',
-  mapsEmbedQuery: 'Peluqueria Demo Madrid',
-  instagram: 'https://instagram.com/peluqueriademo',
+  phone: '+34 981 39 21 00',
+  phoneRaw: '+34981392100',
+  whatsapp: '34698123456',
+  whatsappMessage: 'Hola Lúa Estilistas 👋 Me gustaría reservar cita. ¿Qué disponibilidad tenéis esta semana?',
+  email: 'hola@luaestilistas.es',
+  address: 'Estrada de Castela 75, 15570 Narón (A Coruña)',
+  mapsUrl: 'https://www.google.com/maps/search/?api=1&query=peluquer%C3%ADa+Estrada+de+Castela+Nar%C3%B3n',
+  mapsEmbedQuery: 'Estrada de Castela 75, 15570 Narón, A Coruña',
+  instagram: 'https://instagram.com/luaestilistas',
 
   brand: {
-    primary: '#111111',
-    accent: '#c9a24b',
-    dark: '#1a1a1a',
-    light: '#faf8f4',
+    primary: '#0e0e0e',   // negro
+    accent: '#c6a662',    // dorado suave
+    dark: '#161616',
+    light: '#ffffff',     // blanco
     font: "'Poppins', system-ui, sans-serif",
   },
   heroImage:
-    'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=1600&q=80',
-  logoText: 'Peluquería Demo',
+    'https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?auto=format&fit=crop&w=1600&q=80',
+  logoText: 'Lúa Estilistas',
 
   about:
-    'Más de 15 años cuidando el cabello de nuestros clientes. Cortes, color y tratamientos con producto profesional en un espacio cómodo y cercano. Pide tu cita y deja el resto en nuestras manos.',
+    'Lúa Estilistas nace en Narón con una idea sencilla: tratar cada cabeza como si fuese la nuestra. Somos un salón cercano y cuidado, donde el café está siempre listo y nadie sale por la puerta sin sentirse a gusto. Trabajamos con marcas profesionales y asesoramos de verdad —te decimos lo que de verdad le va a tu pelo, no lo que toca vender. Color, mechas, tratamientos y cortes para toda la familia, a un paso de Ferrol.',
 
   services: [
-    { name: 'Corte mujer', price: '18€', duration: '45 min' },
+    { name: 'Corte y peinado mujer', price: '22€', duration: '45 min', description: 'Lavado, corte personalizado y acabado.' },
     { name: 'Corte caballero', price: '14€', duration: '30 min' },
-    { name: 'Color / tinte', price: 'desde 35€', duration: '90 min' },
-    { name: 'Mechas / balayage', price: 'desde 55€', duration: '120 min' },
-    { name: 'Peinado y recogido', price: 'desde 20€', duration: '45 min' },
-    { name: 'Tratamiento hidratación', price: '25€', duration: '40 min' },
+    { name: 'Corte infantil', price: '11€', duration: '25 min' },
+    { name: 'Color / tinte raíz', price: 'desde 33€', duration: '90 min', description: 'Cobertura de canas y brillo, con lavado y peinado.' },
+    { name: 'Mechas / balayage', price: 'desde 60€', duration: '120 min', description: 'Iluminación a medida según tu tono y tu rostro.' },
+    { name: 'Tratamiento hidratación profunda', price: '25€', duration: '40 min', description: 'Para cabello castigado por sal, sol o color.' },
+    { name: 'Alisado / keratina', price: 'desde 68€', duration: '120 min', description: 'Pelo manejable y sin encrespamiento durante semanas.' },
+    { name: 'Recogido y peinado de evento', price: 'desde 30€', duration: '50 min', description: 'Bodas, comuniones y celebraciones.' },
   ],
 
   hours: [
     { day: 'Lunes', hours: 'Cerrado' },
-    { day: 'Martes', hours: '10:00 - 20:00' },
-    { day: 'Miércoles', hours: '10:00 - 20:00' },
-    { day: 'Jueves', hours: '10:00 - 20:00' },
-    { day: 'Viernes', hours: '10:00 - 20:00' },
+    { day: 'Martes', hours: '09:30 - 13:30 · 16:30 - 20:30' },
+    { day: 'Miércoles', hours: '09:30 - 13:30 · 16:30 - 20:30' },
+    { day: 'Jueves', hours: '09:30 - 13:30 · 16:30 - 20:30' },
+    { day: 'Viernes', hours: '09:30 - 20:30' },
     { day: 'Sábado', hours: '09:00 - 14:00' },
     { day: 'Domingo', hours: 'Cerrado' },
   ],
 
   gallery: [
-    { src: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80', alt: 'Corte y peinado' },
-    { src: 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&w=800&q=80', alt: 'Color' },
-    { src: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=800&q=80', alt: 'Barbería' },
-    { src: 'https://images.unsplash.com/photo-1599351431202-1e0f0137899a?auto=format&fit=crop&w=800&q=80', alt: 'Salón' },
-    { src: 'https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?auto=format&fit=crop&w=800&q=80', alt: 'Producto' },
-    { src: 'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?auto=format&fit=crop&w=800&q=80', alt: 'Detalle' },
+    { src: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80', alt: 'Corte y peinado en Lúa Estilistas, Narón' },
+    { src: 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&w=800&q=80', alt: 'Color y mechas' },
+    { src: 'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=800&q=80', alt: 'Lavado y tratamiento capilar' },
+    { src: 'https://images.unsplash.com/photo-1599351431202-1e0f0137899a?auto=format&fit=crop&w=800&q=80', alt: 'Interior del salón' },
+    { src: 'https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?auto=format&fit=crop&w=800&q=80', alt: 'Producto profesional' },
+    { src: 'https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?auto=format&fit=crop&w=800&q=80', alt: 'Resultado de balayage' },
   ],
 
   reviews: [
-    { author: 'María L.', rating: 5, text: 'El mejor color que me han hecho nunca. Muy atentos y profesionales.' },
-    { author: 'Javier R.', rating: 5, text: 'Voy desde hace años. Nunca fallan. Recomendado 100%.' },
-    { author: 'Lucía P.', rating: 5, text: 'Salí encantada con mi corte. Ambiente súper agradable.' },
+    { author: 'María do Carme', rating: 5, text: 'Llevo años viniendo y nunca me fallan. El balayage me dura muchísimo y siempre me aconsejan con sinceridad. Lo mejor de Narón.' },
+    { author: 'Brais V.', rating: 5, text: 'Trato cercano y muy buen corte. Vengo con mi hijo y se portan genial con los peques. Salimos siempre contentos.' },
+    { author: 'Antía R.', rating: 5, text: 'Me peinaron para una boda en Ferrol y quedé encantadísima. Elegantes, puntuales y muy majas. Repetiré seguro.' },
+    { author: 'Noa F.', rating: 5, text: 'Pedí cita por WhatsApp en dos minutos. Me cuidaron el pelo después de un verano de playa en Doniños. De diez.' },
   ],
-  googleRating: { score: 4.9, count: 187 },
+  googleRating: { score: 4.9, count: 168 },
 
   onlineBooking: { enabled: false, url: '' },
 
   seo: {
-    title: 'Peluquería Demo en Madrid | Corte, color y tratamientos',
+    title: 'Lúa Estilistas | Peluquería en Narón (Ferrol) · color, mechas y tratamientos',
     description:
-      'Peluquería en Madrid especializada en corte, color, mechas y tratamientos. Pide tu cita por WhatsApp o teléfono. Más de 15 años de experiencia.',
+      'Peluquería en Narón, junto a Ferrol. Corte de mujer, hombre y niños, color, mechas, balayage, keratina y peinados de evento. Reserva por WhatsApp o teléfono. Trato cercano y producto profesional.',
     keywords:
-      'peluquería Madrid, corte de pelo Madrid, color pelo Madrid, mechas balayage Madrid, peluquería cerca de mí',
+      'peluquería Narón, peluquería Ferrol, Lúa Estilistas, corte de pelo Narón, mechas Ferrol, balayage Narón, tinte Narón, alisado keratina Narón, peluquería cerca de mí Ferrol, recogidos Narón',
   },
 };
 
