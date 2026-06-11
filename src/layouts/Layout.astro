@@ -1,0 +1,52 @@
+---
+import '../styles/global.css';
+import business from '../config/business';
+
+const { brand, seo, name, city, category, address, phone } = business;
+
+// JSON-LD para SEO local (Google Business)
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'HairSalon',
+  name,
+  description: seo.description,
+  address: { '@type': 'PostalAddress', streetAddress: address, addressLocality: city },
+  telephone: phone,
+  url: business.mapsUrl,
+};
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{seo.title}</title>
+    <meta name="description" content={seo.description} />
+    <meta name="keywords" content={seo.keywords} />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="business.business" />
+    <meta property="og:title" content={seo.title} />
+    <meta property="og:description" content={seo.description} />
+    <meta property="og:image" content={business.heroImage} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <style set:html={`:root{
+      --primary:${brand.primary};
+      --accent:${brand.accent};
+      --dark:${brand.dark};
+      --light:${brand.light};
+      --font:${brand.font};
+    }`} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

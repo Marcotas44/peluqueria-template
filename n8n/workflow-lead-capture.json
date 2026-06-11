@@ -1,0 +1,173 @@
+{
+  "name": "MVP Peluqueria - Captura de Leads",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "node-webhook",
+      "name": "Webhook (formulario web)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-560, 300],
+      "webhookId": "lead-capture"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Normaliza el payload del formulario y limpia datos\nconst b = $json.body || $json;\nreturn [{\n  json: {\n    slug: b.slug || 'desconocido',\n    nombre: (b.name || '').toString().trim(),\n    telefono: (b.phone || '').toString().trim(),\n    email: (b.email || '').toString().trim().toLowerCase(),\n    servicio: b.service || '',\n    mensaje: b.message || '',\n    origen: b.source || 'web',\n    pagina: b.page || '',\n    created_at: b.created_at || new Date().toISOString()\n  }\n}];"
+      },
+      "id": "node-normalize",
+      "name": "Normalizar datos",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-340, 300]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "negocios",
+        "limit": 1,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "slug",
+              "condition": "eq",
+              "keyValue": "={{ $json.slug }}"
+            }
+          ]
+        }
+      },
+      "id": "node-getbusiness",
+      "name": "Buscar negocio (Supabase)",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [-120, 300],
+      "credentials": {
+        "supabaseApi": { "id": "REEMPLAZAR", "name": "Supabase MVP" }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "tableId": "leads",
+        "fieldsUi": {
+          "fieldValues": [
+            { "fieldId": "business_id", "fieldValue": "={{ $json.id }}" },
+            { "fieldId": "business_slug", "fieldValue": "={{ $('Normalizar datos').item.json.slug }}" },
+            { "fieldId": "nombre", "fieldValue": "={{ $('Normalizar datos').item.json.nombre }}" },
+            { "fieldId": "telefono", "fieldValue": "={{ $('Normalizar datos').item.json.telefono }}" },
+            { "fieldId": "email", "fieldValue": "={{ $('Normalizar datos').item.json.email }}" },
+            { "fieldId": "servicio", "fieldValue": "={{ $('Normalizar datos').item.json.servicio }}" },
+            { "fieldId": "mensaje", "fieldValue": "={{ $('Normalizar datos').item.json.mensaje }}" },
+            { "fieldId": "origen", "fieldValue": "={{ $('Normalizar datos').item.json.origen }}" },
+            { "fieldId": "pagina", "fieldValue": "={{ $('Normalizar datos').item.json.pagina }}" },
+            { "fieldId": "estado", "fieldValue": "nuevo" }
+          ]
+        }
+      },
+      "id": "node-insertlead",
+      "name": "Guardar lead (Supabase)",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [120, 300],
+      "credentials": {
+        "supabaseApi": { "id": "REEMPLAZAR", "name": "Supabase MVP" }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "avisos@tudominio.com",
+        "toEmail": "={{ $('Buscar negocio (Supabase)').item.json.owner_email }}",
+        "subject": "=Nuevo lead web - {{ $('Normalizar datos').item.json.nombre }}",
+        "emailFormat": "html",
+        "html": "=<h2>Nuevo contacto desde la web</h2><p><b>Nombre:</b> {{ $('Normalizar datos').item.json.nombre }}</p><p><b>Telefono:</b> {{ $('Normalizar datos').item.json.telefono }}</p><p><b>Email:</b> {{ $('Normalizar datos').item.json.email }}</p><p><b>Servicio:</b> {{ $('Normalizar datos').item.json.servicio }}</p><p><b>Mensaje:</b> {{ $('Normalizar datos').item.json.mensaje }}</p><p><b>Origen:</b> {{ $('Normalizar datos').item.json.origen }}</p>",
+        "options": {}
+      },
+      "id": "node-emailowner",
+      "name": "Avisar al dueno (Email)",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [380, 180],
+      "credentials": {
+        "smtp": { "id": "REEMPLAZAR", "name": "SMTP" }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Buscar negocio (Supabase)').item.json.owner_telegram }}",
+        "text": "=Nuevo lead web%0A%0ANombre: {{ $('Normalizar datos').item.json.nombre }}%0ATelefono: {{ $('Normalizar datos').item.json.telefono }}%0AServicio: {{ $('Normalizar datos').item.json.servicio }}%0AMensaje: {{ $('Normalizar datos').item.json.mensaje }}",
+        "additionalFields": {}
+      },
+      "id": "node-telegram",
+      "name": "Avisar al dueno (Telegram) [opcional]",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [380, 320],
+      "credentials": {
+        "telegramApi": { "id": "REEMPLAZAR", "name": "Telegram MVP" }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "fromEmail": "hola@tudominio.com",
+        "toEmail": "={{ $('Normalizar datos').item.json.email }}",
+        "subject": "=Hemos recibido tu solicitud",
+        "emailFormat": "html",
+        "html": "=<p>Hola {{ $('Normalizar datos').item.json.nombre }},</p><p>Gracias por escribirnos. Hemos recibido tu solicitud y te contactaremos muy pronto para confirmar tu cita.</p><p>Un saludo,<br/>{{ $('Buscar negocio (Supabase)').item.json.nombre }}</p>",
+        "options": {}
+      },
+      "id": "node-autoreply",
+      "name": "Autorespuesta al cliente (Email)",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [380, 460],
+      "credentials": {
+        "smtp": { "id": "REEMPLAZAR", "name": "SMTP" }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"ok\": true, \"message\": \"Lead recibido\"}",
+        "options": {}
+      },
+      "id": "node-respond",
+      "name": "Responder a la web",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [660, 300]
+    }
+  ],
+  "connections": {
+    "Webhook (formulario web)": {
+      "main": [[{ "node": "Normalizar datos", "type": "main", "index": 0 }]]
+    },
+    "Normalizar datos": {
+      "main": [[{ "node": "Buscar negocio (Supabase)", "type": "main", "index": 0 }]]
+    },
+    "Buscar negocio (Supabase)": {
+      "main": [[{ "node": "Guardar lead (Supabase)", "type": "main", "index": 0 }]]
+    },
+    "Guardar lead (Supabase)": {
+      "main": [[
+        { "node": "Avisar al dueno (Email)", "type": "main", "index": 0 },
+        { "node": "Avisar al dueno (Telegram) [opcional]", "type": "main", "index": 0 },
+        { "node": "Autorespuesta al cliente (Email)", "type": "main", "index": 0 }
+      ]]
+    },
+    "Avisar al dueno (Email)": {
+      "main": [[{ "node": "Responder a la web", "type": "main", "index": 0 }]]
+    },
+    "Autorespuesta al cliente (Email)": {
+      "main": [[{ "node": "Responder a la web", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": { "executionOrder": "v1" },
+  "active": false,
+  "pinData": {},
+  "meta": { "templateMvp": "peluqueria-lead-capture-v1" }
+}

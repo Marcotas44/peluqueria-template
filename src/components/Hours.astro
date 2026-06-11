@@ -1,0 +1,38 @@
+---
+import business from '../config/business';
+const { hours, address, mapsUrl, mapsEmbedQuery } = business;
+const embed = `https://www.google.com/maps?q=${encodeURIComponent(mapsEmbedQuery)}&output=embed`;
+---
+<section id="horarios" class="hours">
+  <div class="container grid grid-2">
+    <div>
+      <div class="section-title" style="text-align:left">
+        <span>Visítanos</span>
+        <h2>Horarios y ubicación</h2>
+      </div>
+      <table>
+        {hours.map((h) => (
+          <tr class={h.hours === 'Cerrado' ? 'closed' : ''}>
+            <td>{h.day}</td>
+            <td>{h.hours}</td>
+          </tr>
+        ))}
+      </table>
+      <p class="addr">📍 {address}</p>
+      <a class="btn btn-outline" href={mapsUrl} target="_blank" rel="noopener">Cómo llegar</a>
+    </div>
+    <div class="map">
+      <iframe src={embed} loading="lazy" title="Mapa" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+  </div>
+</section>
+
+<style>
+  table { width: 100%; border-collapse: collapse; margin-bottom: 18px; }
+  td { padding: 11px 0; border-bottom: 1px solid rgba(0,0,0,.08); }
+  td:last-child { text-align: right; font-weight: 600; }
+  tr.closed { opacity: .5; }
+  .addr { margin: 14px 0; font-weight: 500; }
+  .map { border-radius: 16px; overflow: hidden; min-height: 340px; box-shadow: 0 8px 30px rgba(0,0,0,.08); }
+  .map iframe { width: 100%; height: 100%; min-height: 340px; border: 0; }
+</style>

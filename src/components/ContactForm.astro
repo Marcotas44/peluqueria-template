@@ -1,0 +1,106 @@
+---
+import business from '../config/business';
+const { services, slug } = business;
+---
+<section id="contacto" class="contact">
+  <div class="container">
+    <div class="section-title">
+      <span>Pide tu cita</span>
+      <h2>Escríbenos y te contestamos</h2>
+      <p class="muted">Te respondemos en breve por WhatsApp o email.</p>
+    </div>
+
+    <form id="lead-form" class="card form" data-slug={slug}>
+      <div class="grid grid-2">
+        <label>Nombre*
+          <input name="name" type="text" required placeholder="Tu nombre" />
+        </label>
+        <label>Teléfono / WhatsApp*
+          <input name="phone" type="tel" required placeholder="600 000 000" />
+        </label>
+      </div>
+      <div class="grid grid-2">
+        <label>Email
+          <input name="email" type="email" placeholder="tu@email.com" />
+        </label>
+        <label>Servicio de interés
+          <select name="service">
+            <option value="">Sin especificar</option>
+            {services.map((s) => <option value={s.name}>{s.name}</option>)}
+          </select>
+        </label>
+      </div>
+      <label>Mensaje
+        <textarea name="message" rows="3" placeholder="¿Qué necesitas? ¿Día preferido?"></textarea>
+      </label>
+
+      <!-- honeypot anti-spam -->
+      <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" />
+
+      <button class="btn btn-primary" type="submit">Enviar solicitud</button>
+      <p id="form-msg" class="form-msg" role="status"></p>
+    </form>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById('lead-form');
+  const msg = document.getElementById('form-msg');
+  const WEBHOOK = import.meta.env.PUBLIC_N8N_WEBHOOK_URL;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(form);
+    if (fd.get('company')) return; // honeypot
+
+    const payload = {
+      slug: form.dataset.slug,
+      source: 'web',
+      name: fd.get('name'),
+      phone: fd.get('phone'),
+      email: fd.get('email'),
+      service: fd.get('service'),
+      message: fd.get('message'),
+      page: location.href,
+      created_at: new Date().toISOString(),
+    };
+
+    const btn = form.querySelector('button');
+    btn.disabled = true;
+    msg.textContent = 'Enviando...';
+    msg.className = 'form-msg';
+
+    try {
+      if (!WEBHOOK) throw new Error('webhook no configurado');
+      const res = await fetch(WEBHOOK, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error('respuesta no ok');
+      msg.textContent = '✅ ¡Recibido! Te contactamos enseguida.';
+      msg.className = 'form-msg ok';
+      form.reset();
+    } catch (err) {
+      msg.textContent = '⚠️ No se pudo enviar. Escríbenos por WhatsApp, por favor.';
+      msg.className = 'form-msg err';
+    } finally {
+      btn.disabled = false;
+    }
+  });
+</script>
+
+<style>
+  .form { max-width: 760px; margin: 0 auto; display: grid; gap: 16px; }
+  label { display: flex; flex-direction: column; gap: 6px; font-weight: 500; font-size: .92rem; }
+  input, select, textarea {
+    padding: 12px 14px; border: 1px solid rgba(0,0,0,.15);
+    border-radius: 10px; font: inherit; background: #fff;
+  }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); border-color: transparent; }
+  .hp { display: none; }
+  button { justify-self: start; }
+  .form-msg { font-weight: 500; min-height: 1.2em; }
+  .form-msg.ok { color: #1a7f37; }
+  .form-msg.err { color: #b42318; }
+</style>

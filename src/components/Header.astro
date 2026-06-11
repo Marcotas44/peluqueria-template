@@ -1,0 +1,36 @@
+---
+import business from '../config/business';
+const { logoText, whatsapp, whatsappMessage } = business;
+const waLink = `https://wa.me/${whatsapp}?text=${encodeURIComponent(whatsappMessage)}`;
+---
+<header>
+  <div class="container bar">
+    <a href="#inicio" class="logo">{logoText}</a>
+    <nav>
+      <a href="#servicios">Servicios</a>
+      <a href="#galeria">Galería</a>
+      <a href="#opiniones">Opiniones</a>
+      <a href="#horarios">Horarios</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+    <a class="btn btn-primary cta" href={waLink} target="_blank" rel="noopener">Pedir cita</a>
+  </div>
+</header>
+
+<style>
+  header {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(0,0,0,.06);
+  }
+  .bar { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+  .logo { font-weight: 700; font-size: 1.15rem; }
+  nav { display: flex; gap: 26px; }
+  nav a { font-size: .95rem; font-weight: 500; }
+  nav a:hover { color: var(--accent); }
+  .cta { padding: 9px 20px; font-size: .9rem; }
+  @media (max-width: 820px) {
+    nav { display: none; }
+  }
+</style>

@@ -1,0 +1,26 @@
+---
+import business from '../config/business';
+const { about, name } = business;
+---
+<section id="sobre" class="about">
+  <div class="container grid grid-2">
+    <div>
+      <div class="section-title" style="text-align:left">
+        <span>Quiénes somos</span>
+        <h2>{name}</h2>
+      </div>
+      <p class="muted">{about}</p>
+    </div>
+    <ul class="features">
+      <li>✂️ Profesionales con experiencia</li>
+      <li>🧴 Producto de primeras marcas</li>
+      <li>🕒 Cita rápida por WhatsApp</li>
+      <li>⭐ Clientes que repiten</li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .features { list-style: none; display: grid; gap: 14px; align-content: center; }
+  .features li { background: #fff; padding: 16px 20px; border-radius: 12px; font-weight: 500; box-shadow: 0 6px 20px rgba(0,0,0,.05); }
+</style>

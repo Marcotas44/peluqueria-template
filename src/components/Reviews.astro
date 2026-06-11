@@ -1,0 +1,34 @@
+---
+import business from '../config/business';
+const { reviews, googleRating, mapsUrl } = business;
+const stars = (n) => '★'.repeat(n) + '☆'.repeat(5 - n);
+---
+<section id="opiniones" class="reviews">
+  <div class="container">
+    <div class="section-title">
+      <span>Opiniones</span>
+      <h2>Lo que dicen nuestros clientes</h2>
+      {googleRating && (
+        <p class="muted">★ {googleRating.score} de 5 · {googleRating.count} reseñas en Google</p>
+      )}
+    </div>
+    <div class="grid grid-3">
+      {reviews.map((r) => (
+        <div class="card review">
+          <p class="stars">{stars(r.rating)}</p>
+          <p>"{r.text}"</p>
+          <p class="author">— {r.author}</p>
+        </div>
+      ))}
+    </div>
+    <div style="text-align:center; margin-top:32px">
+      <a class="btn btn-outline" href={mapsUrl} target="_blank" rel="noopener">Ver todas las reseñas en Google</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .review .stars { color: var(--accent); font-size: 1.1rem; letter-spacing: 2px; }
+  .review p { margin-bottom: 10px; }
+  .author { font-weight: 600; color: var(--dark); }
+</style>

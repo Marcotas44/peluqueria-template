@@ -1,0 +1,42 @@
+---
+import business from '../config/business';
+const { name, tagline, city, category, heroImage, phoneRaw, phone, whatsapp, whatsappMessage, googleRating } = business;
+const waLink = `https://wa.me/${whatsapp}?text=${encodeURIComponent(whatsappMessage)}`;
+---
+<section id="inicio" class="hero">
+  <div class="overlay"></div>
+  <div class="container content">
+    <p class="eyebrow">{category} en {city}</p>
+    <h1>{name}</h1>
+    <p class="tagline">{tagline}</p>
+    <div class="actions">
+      <a class="btn btn-wa" href={waLink} target="_blank" rel="noopener">💬 Pedir cita por WhatsApp</a>
+      <a class="btn btn-outline light" href={`tel:${phoneRaw}`}>📞 Llamar {phone}</a>
+    </div>
+    {googleRating && (
+      <p class="rating">★ {googleRating.score} · {googleRating.count} reseñas en Google</p>
+    )}
+  </div>
+</section>
+
+<style define:vars={{ bg: `url('${heroImage}')` }}>
+  .hero {
+    position: relative;
+    min-height: 86vh;
+    display: flex; align-items: center;
+    background-image: var(--bg);
+    background-size: cover; background-position: center;
+    color: #fff;
+  }
+  .overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(120deg, rgba(0,0,0,.72), rgba(0,0,0,.35));
+  }
+  .content { position: relative; z-index: 2; max-width: 720px; }
+  .eyebrow { text-transform: uppercase; letter-spacing: 3px; font-size: .85rem; color: var(--accent); font-weight: 600; }
+  h1 { font-size: clamp(2.4rem, 7vw, 4.2rem); margin: 8px 0; }
+  .tagline { font-size: clamp(1.1rem, 2.5vw, 1.5rem); opacity: .92; margin-bottom: 28px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 14px; }
+  .btn-outline.light { border-color: #fff; color: #fff; }
+  .rating { margin-top: 22px; font-weight: 500; }
+</style>
