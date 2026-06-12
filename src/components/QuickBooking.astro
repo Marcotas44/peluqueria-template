@@ -1,0 +1,90 @@
+---
+import business from '../config/business';
+const { whatsapp, whatsappMessage } = business;
+const waLink = `https://wa.me/${whatsapp}?text=${encodeURIComponent(whatsappMessage)}`;
+
+const steps = [
+  {
+    icon: '💬',
+    title: 'Respuesta por WhatsApp',
+    text: 'Nos escribes y te atiende una persona del salón, no un robot.',
+  },
+  {
+    icon: '⚡',
+    title: 'Confirmación rápida',
+    text: 'Te proponemos día y hora y dejamos tu cita cerrada al momento.',
+  },
+  {
+    icon: '🙌',
+    title: 'Sin llamadas innecesarias',
+    text: 'Todo por chat, a tu ritmo. Sin esperas ni teléfono ocupado.',
+  },
+];
+---
+<section id="reserva-rapida" class="quick">
+  <div class="container">
+    <div class="section-title">
+      <span>Pedir cita es fácil</span>
+      <h2>Reserva en menos de 60 segundos</h2>
+      <p class="lead">Tres pasos y listo. Así de simple reservas en {business.name}.</p>
+    </div>
+
+    <div class="grid grid-3 steps">
+      {steps.map((s, i) => (
+        <div class="step">
+          <span class="num">{String(i + 1).padStart(2, '0')}</span>
+          <div class="icon">{s.icon}</div>
+          <h3>{s.title}</h3>
+          <p>{s.text}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="cta">
+      <a class="btn btn-wa" href={waLink} target="_blank" rel="noopener">💬 Reservar ahora por WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .quick {
+    background: var(--primary);
+    color: #fff;
+  }
+  .quick .section-title span { color: var(--accent); }
+  .quick .lead {
+    margin-top: 12px;
+    color: rgba(255, 255, 255, .72);
+    font-size: 1.05rem;
+  }
+
+  .steps { margin-top: 8px; }
+
+  .step {
+    position: relative;
+    background: var(--dark);
+    border: 1px solid rgba(198, 166, 98, .25);
+    border-radius: 16px;
+    padding: 32px 26px 28px;
+    overflow: hidden;
+    transition: transform .18s ease, border-color .18s ease;
+  }
+  .step:hover {
+    transform: translateY(-4px);
+    border-color: rgba(198, 166, 98, .6);
+  }
+
+  .num {
+    position: absolute;
+    top: 16px; right: 20px;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: rgba(198, 166, 98, .18);
+    letter-spacing: 1px;
+  }
+  .icon { font-size: 1.9rem; margin-bottom: 14px; }
+  .step h3 { font-size: 1.12rem; margin-bottom: 8px; }
+  .step p { color: rgba(255, 255, 255, .68); font-size: .95rem; }
+
+  .cta { text-align: center; margin-top: 40px; }
+</style>
