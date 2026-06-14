@@ -2,17 +2,50 @@
 import '../styles/global.css';
 import business from '../config/business';
 
-const { brand, seo, name, city, category, address, phone } = business;
+const { brand, seo, name, city, category, address, phone, email, instagram, mapsUrl, heroImage, hours, googleRating, services } = business;
 
-// JSON-LD para SEO local (Google Business)
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://lua-estilistas.netlify.app').href;
+
+// Horarios → openingHoursSpecification (SEO local)
+const dayMap = { 'Lunes': 'Monday', 'Martes': 'Tuesday', 'Miércoles': 'Wednesday', 'Jueves': 'Thursday', 'Viernes': 'Friday', 'Sábado': 'Saturday', 'Domingo': 'Sunday' };
+const openingHours = [];
+for (const row of hours) {
+  const day = dayMap[row.day];
+  if (!day || /cerrado/i.test(row.hours)) continue;
+  for (const seg of row.hours.split('·')) {
+    const m = seg.trim().match(/(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})/);
+    if (m) openingHours.push({ '@type': 'OpeningHoursSpecification', dayOfWeek: day, opens: m[1], closes: m[2] });
+  }
+}
+
+// JSON-LD para SEO local (Google Business / Narón · Ferrol)
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'HairSalon',
+  '@id': `${canonical}#business`,
   name,
   description: seo.description,
-  address: { '@type': 'PostalAddress', streetAddress: address, addressLocality: city },
+  image: heroImage,
+  url: canonical,
   telephone: phone,
-  url: business.mapsUrl,
+  email,
+  priceRange: '€€',
+  currenciesAccepted: 'EUR',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: address,
+    addressLocality: city,
+    postalCode: '15570',
+    addressRegion: 'A Coruña',
+    addressCountry: 'ES',
+  },
+  areaServed: ['Narón', 'Ferrol', 'Fene', 'Neda', 'A Coruña'].map((a) => ({ '@type': 'City', name: a })),
+  geo: { '@type': 'GeoCoordinates', latitude: 43.5104, longitude: -8.1744 },
+  hasMap: mapsUrl,
+  openingHoursSpecification: openingHours,
+  makesOffer: services.map((s) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: s.name } })),
+  ...(instagram ? { sameAs: [instagram] } : {}),
+  ...(googleRating ? { aggregateRating: { '@type': 'AggregateRating', ratingValue: googleRating.score, reviewCount: googleRating.count, bestRating: 5 } } : {}),
 };
 ---
 <!doctype html>
@@ -25,16 +58,33 @@ const jsonLd = {
     <meta name="description" content={seo.description} />
     <meta name="keywords" content={seo.keywords} />
     <meta name="robots" content="index, follow" />
+    <meta name="author" content={name} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- SEO local (Narón · Ferrol) -->
+    <meta name="geo.region" content="ES-C" />
+    <meta name="geo.placename" content={`${city}, Ferrol, A Coruña`} />
+    <meta name="geo.position" content="43.5104;-8.1744" />
+    <meta name="ICBM" content="43.5104, -8.1744" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="business.business" />
+    <meta property="og:site_name" content={name} />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:url" content={canonical} />
     <meta property="og:title" content={seo.title} />
     <meta property="og:description" content={seo.description} />
-    <meta property="og:image" content={business.heroImage} />
+    <meta property="og:image" content={heroImage} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={seo.title} />
+    <meta name="twitter:description" content={seo.description} />
+    <meta name="twitter:image" content={heroImage} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
